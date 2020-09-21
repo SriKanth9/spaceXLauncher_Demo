@@ -8,7 +8,8 @@ import SpaceFlights from "./SpaceFlights";
 import LaunchSuccess from "./LaunchSuccess";
 import LandSuccess from "./LandSuccess";
 
-import style from './style.css';
+import "./style.css";
+import Search from "./Search";
 
 class App extends React.Component {
   constructor(props) {
@@ -18,6 +19,7 @@ class App extends React.Component {
       launchSuccess: null,
       landSuccess: null,
       launchYear: null,
+      search: "",
     };
   }
   async getSpacexData() {
@@ -77,11 +79,21 @@ class App extends React.Component {
     });
   };
 
+  filterRocket = (e) => {
+    this.setState({
+      search: e,
+    });
+  };
+
   render() {
     return this.state.spacexData.length > 0 ? (
       <div className="spacexContainer">
         <div className="spacexHeader">
           <h2 className="title">SpaceX Launch Programs</h2>
+          <Search
+            onFilterRocket={this.filterRocket}
+            searchVal={this.state.search}
+          />
         </div>
         <div className="spaceXFlighs">
           <div className="fliters">
@@ -94,12 +106,13 @@ class App extends React.Component {
             <LandSuccess land={this.landSuccess} />
           </div>
           <>
-          <SpaceFlights
-            rocketData={this.state.spacexData}
-            launchYear={this.state.launchYear}
-            landSuccess={this.state.landSuccess}
-            launchSuccess={this.state.launchSuccess}
-          />
+            <SpaceFlights
+              rocketData={this.state.spacexData}
+              launchYear={this.state.launchYear}
+              landSuccess={this.state.landSuccess}
+              launchSuccess={this.state.launchSuccess}
+              isFilterRocket={this.state.search}
+            />
           </>
         </div>
         <div className="about">
@@ -107,7 +120,7 @@ class App extends React.Component {
         </div>
       </div>
     ) : (
-      < div className="initialLoader">
+      <div className="initialLoader">
         <Button variant="primary" disabled>
           <Spinner
             as="span"
@@ -117,7 +130,7 @@ class App extends React.Component {
             aria-hidden="true"
             className="spinner"
           />
-           <span className="sr-only">Loading...</span>
+          <span className="sr-only">Loading...</span>
         </Button>
       </div>
     );

@@ -4,16 +4,20 @@ class SpaceFlights extends React.Component {
   render() {
     const spaceRockets = this.props.rocketData ? this.props.rocketData : [];
     const lYear = this.props.launchYear;
-    const landS = this.props.landSuccess;
+    //const landS = this.props.landSuccess;
     const launchS = this.props.launchSuccess;
+    const isRocketFilter = this.props.isFilterRocket;
     let row = [];
-    spaceRockets.forEach((rocket,idx)=>{
-            if(filterFlight(rocket,lYear,launchS)){
-                row.push(rocket)
-            }
-        
-    })
-    console.log(launchS,row);
+    spaceRockets.forEach((rocket, idx) => {
+      let rocketName = rocket.mission_name;
+      if (isRocketFilter.length > 0) {
+        if (rocketName.includes(isRocketFilter)) row.push(rocket);
+      } else {
+        if (filterFlight(rocket, lYear, launchS)) {
+          row.push(rocket);
+        }
+      }
+    });
     let list =
       row.length > 0
         ? row.map((rocket, idx) => (
@@ -76,14 +80,13 @@ class SpaceFlights extends React.Component {
 
 export default SpaceFlights;
 
-
-function filterFlight(flight,year,lsucc){
-    let bool = flight.launch_success.toString();
-    if(year && lsucc===null){
-        if(flight.launch_year === year){
-            return true;
-        }
-    }else if(flight.launch_year===year && (bool===lsucc)){
-        return true;
+function filterFlight(flight, year, lsucc) {
+  let bool = flight.launch_success.toString();
+  if (year && lsucc === null) {
+    if (flight.launch_year === year) {
+      return true;
     }
+  } else if (flight.launch_year === year && bool === lsucc) {
+    return true;
+  }
 }
